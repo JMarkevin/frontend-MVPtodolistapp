@@ -75,7 +75,7 @@ export const CompletedSection: React.FC<CompletedSectionProps> = ({
 
       {/* Frame 2 - Todo List */}
       <div
-        className='flex flex-col items-center p-0 w-[361px] md:w-[600px] h-[356px] md:h-[380px] flex-none order-4 self-stretch flex-grow-0'
+        className='flex flex-col items-center p-0 w-[361px] md:w-[620px] h-[356px] md:h-[380px] flex-none order-4 self-stretch flex-grow-0'
         style={{ gap: '12px' }}
       >
         <CompletedTodoList onCountChange={handleCountChange} />

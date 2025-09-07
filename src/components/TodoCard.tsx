@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 
 interface TodoCardProps {
   todo: Todo;
+  showActions?: boolean;
 }
 
 const getPriorityStyles = (priority: Priority) => {
@@ -48,7 +49,10 @@ const getPriorityStyles = (priority: Priority) => {
   }
 };
 
-export const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
+export const TodoCard: React.FC<TodoCardProps> = ({
+  todo,
+  showActions = true,
+}) => {
   const updateTodo = useUpdateTodo();
   const deleteTodo = useDeleteTodo();
   const { toast } = useToast();
@@ -207,77 +211,79 @@ export const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
       </div>
 
       {/* Three Dots Menu - Right side with proper styling */}
-      <div className='relative flex-none order-2 flex-grow-0'>
-        <button
-          ref={buttonRef}
-          onClick={isProcessing ? undefined : handleMenuToggle}
-          disabled={isProcessing}
-          className={`w-6 h-6 flex items-center justify-center transition-colors ${
-            isProcessing
-              ? 'text-[#666] cursor-not-allowed'
-              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
-          }`}
-        >
-          {isDeleting ? (
-            <Loader2 className='w-4 h-4 animate-spin' />
-          ) : (
-            <MoreHorizontal className='w-4 h-4' />
+      {showActions && (
+        <div className='relative flex-none order-2 flex-grow-0'>
+          <button
+            ref={buttonRef}
+            onClick={isProcessing ? undefined : handleMenuToggle}
+            disabled={isProcessing}
+            className={`w-6 h-6 flex items-center justify-center transition-colors ${
+              isProcessing
+                ? 'text-[#666] cursor-not-allowed'
+                : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+            }`}
+          >
+            {isDeleting ? (
+              <Loader2 className='w-4 h-4 animate-spin' />
+            ) : (
+              <MoreHorizontal className='w-4 h-4' />
+            )}
+          </button>
+
+          {/* Dropdown Menu */}
+          {isMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className='fixed inset-0 z-[9998]'
+                onClick={() => setIsMenuOpen(false)}
+              />
+
+              {/* Menu - Use fixed positioning to escape container clipping */}
+              <div
+                className={`fixed z-[9999] w-[196px] h-[100px] ${
+                  theme === 'light' ? 'bg-white' : 'bg-black'
+                } border border-[var(--card-border)] rounded-2xl flex flex-col items-start p-4`}
+                style={{
+                  gap: '20px',
+                  top: `${menuPosition.top}px`,
+                  right: `${menuPosition.right}px`,
+                }}
+              >
+                {/* Edit Option */}
+                <button
+                  onClick={handleEdit}
+                  className='flex flex-row items-center p-0 w-[57px] h-6 hover:opacity-80 transition-opacity'
+                  style={{ gap: '8px' }}
+                >
+                  <Edit className='w-5 h-5 text-[var(--foreground)] flex-none order-0 flex-grow-0' />
+                  <span
+                    className='w-[29px] h-6 text-[16px] font-normal leading-6 tracking-[-0.02em] text-[var(--foreground)] flex-none order-1 flex-grow-0'
+                    style={{ fontFamily: 'SF Pro' }}
+                  >
+                    Edit
+                  </span>
+                </button>
+
+                {/* Delete Option */}
+                <button
+                  onClick={handleDelete}
+                  className='flex flex-row items-center p-0 w-[76px] h-6 hover:opacity-80 transition-opacity'
+                  style={{ gap: '8px' }}
+                >
+                  <Trash2 className='w-5 h-5 text-[#D9206E] flex-none order-0 flex-grow-0' />
+                  <span
+                    className='w-[48px] h-6 text-[16px] font-normal leading-6 tracking-[-0.02em] text-[#D9206E] flex-none order-1 flex-grow-0'
+                    style={{ fontFamily: 'SF Pro' }}
+                  >
+                    Delete
+                  </span>
+                </button>
+              </div>
+            </>
           )}
-        </button>
-
-        {/* Dropdown Menu */}
-        {isMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className='fixed inset-0 z-[9998]'
-              onClick={() => setIsMenuOpen(false)}
-            />
-
-            {/* Menu - Use fixed positioning to escape container clipping */}
-            <div
-              className={`fixed z-[9999] w-[196px] h-[100px] ${
-                theme === 'light' ? 'bg-white' : 'bg-black'
-              } border border-[var(--card-border)] rounded-2xl flex flex-col items-start p-4`}
-              style={{
-                gap: '20px',
-                top: `${menuPosition.top}px`,
-                right: `${menuPosition.right}px`,
-              }}
-            >
-              {/* Edit Option */}
-              <button
-                onClick={handleEdit}
-                className='flex flex-row items-center p-0 w-[57px] h-6 hover:opacity-80 transition-opacity'
-                style={{ gap: '8px' }}
-              >
-                <Edit className='w-5 h-5 text-[var(--foreground)] flex-none order-0 flex-grow-0' />
-                <span
-                  className='w-[29px] h-6 text-[16px] font-normal leading-6 tracking-[-0.02em] text-[var(--foreground)] flex-none order-1 flex-grow-0'
-                  style={{ fontFamily: 'SF Pro' }}
-                >
-                  Edit
-                </span>
-              </button>
-
-              {/* Delete Option */}
-              <button
-                onClick={handleDelete}
-                className='flex flex-row items-center p-0 w-[76px] h-6 hover:opacity-80 transition-opacity'
-                style={{ gap: '8px' }}
-              >
-                <Trash2 className='w-5 h-5 text-[#D9206E] flex-none order-0 flex-grow-0' />
-                <span
-                  className='w-[48px] h-6 text-[16px] font-normal leading-6 tracking-[-0.02em] text-[#D9206E] flex-none order-1 flex-grow-0'
-                  style={{ fontFamily: 'SF Pro' }}
-                >
-                  Delete
-                </span>
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Edit Task Modal */}
       <EditTaskModal

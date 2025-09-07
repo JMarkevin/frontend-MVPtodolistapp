@@ -185,14 +185,14 @@ export const CompletedTodoList: React.FC<CompletedTodoListProps> = ({
               ref={lastTodoElementRef}
               className='flex-none self-stretch flex-grow-0'
             >
-              <TodoCard todo={todo} />
+              <TodoCard todo={todo} showActions={false} />
             </div>
           );
         }
 
         return (
           <div key={todo.id} className='flex-none self-stretch flex-grow-0'>
-            <TodoCard todo={todo} />
+            <TodoCard todo={todo} showActions={false} />
           </div>
         );
       })}
