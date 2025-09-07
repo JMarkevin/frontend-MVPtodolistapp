@@ -116,7 +116,3 @@ src/
 ├── types/              # TypeScript type definitions
 └── main.tsx           # App entry point
 ```
-
-## License
-
-ISC
